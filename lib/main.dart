@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
-import 'components/transaction_user.dart';
 import 'models/transaction.dart';
 
 main() => runApp(const ExpensesApp());

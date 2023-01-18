@@ -1,20 +1,21 @@
 import 'dart:math';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
 import 'components/chart.dart';
 import 'models/transaction.dart';
 
-main() => runApp(const ExpensesApp());
+main() => runApp(ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  const ExpensesApp({super.key});
+  ExpensesApp({super.key});
+  final ThemeData tema = ThemeData(fontFamily: 'Quicksand');
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData tema = ThemeData(fontFamily: 'Quicksand');
-
     return MaterialApp(
       home: const MyHomePage(),
       theme: tema.copyWith(
@@ -88,47 +89,55 @@ class _MyHomePageState extends State<MyHomePage> {
   _openTransactionFormModal(BuildContext context) {
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (_) {
         return TransactionForm(_addTransaction);
       },
     );
   }
 
+  Widget _getIconButton({required IconData icon, required Function() fn}) {
+    return Platform.isIOS
+        ? GestureDetector(onTap: fn, child: Icon(icon))
+        : IconButton(onPressed: fn, icon: Icon(icon));
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isLandescape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandescape = mediaQuery.orientation == Orientation.landscape;
+
+    final actions = [
+      if (isLandescape)
+        _getIconButton(
+          fn: () => setState(() {
+            _showChart = !_showChart;
+          }),
+          icon: _showChart ? Icons.list_rounded : Icons.bar_chart_rounded,
+        ),
+      _getIconButton(
+        fn: () => _openTransactionFormModal(context),
+        icon: Icons.add,
+      ),
+    ];
 
     final appBar = AppBar(
       title: const Text(
         'Despesas',
         // TextScaleFactor retorna a configuração de acessibilidade de texto do usuário
         // style: TextStyle(
-        //   fontSize: 20 * (MediaQuery.of(context).textScaleFactor);
+        //   fontSize: 20 * (mediaQuery.textScaleFactor);
         // ),
       ),
-      actions: [
-        if (isLandescape)
-          IconButton(
-            onPressed: () => setState(() {
-              _showChart = !_showChart;
-            }),
-            icon: Icon(_showChart ? Icons.list_rounded : Icons.bar_chart_rounded),
-          ),
-        IconButton(
-          onPressed: () => _openTransactionFormModal(context),
-          icon: const Icon(Icons.add),
-        ),
-      ],
+      actions: actions,
     );
 
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top; //tamanho do status bar
+        mediaQuery.padding.top; //tamanho do status bar
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final bodyPage = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -137,8 +146,9 @@ class _MyHomePageState extends State<MyHomePage> {
             //     mainAxisAlignment: MainAxisAlignment.center,
             //     children: [
             //       const Text('Exibir Gráfico'),
-            //       Switch(
+            //       Switch.adaptive(
             //         value: _showChart,
+            //         activeTrackColor: Theme.of(context).colorScheme.secondary,
             //         onChanged: (value) {
             //           setState(() {
             //             _showChart = value;
@@ -155,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!_showChart || !isLandescape)
               SizedBox(
-                height: availableHeight * 0.7,
+                height: availableHeight * (isLandescape ? 1 : 0.7),
                 child: TransactionList(
                   transactions: _transactions,
                   onRemove: _removeTransaction,
@@ -164,11 +174,29 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openTransactionFormModal(context),
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: const Text('Despesas'),
+              trailing: Row(
+                children: actions,
+              ),
+            ),
+            child: bodyPage,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: bodyPage,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () => _openTransactionFormModal(context),
+                    child: const Icon(Icons.add),
+                  ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          );
   }
 }

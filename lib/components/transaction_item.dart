@@ -62,7 +62,7 @@ class _TransactionItemState extends State<TransactionItem> {
         ),
         title: Text(
           widget.tr.title,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         subtitle: Text(
           DateFormat('d MMM y').format(widget.tr.date),
@@ -72,12 +72,12 @@ class _TransactionItemState extends State<TransactionItem> {
                 onPressed: () => widget.onRemove(widget.tr.id),
                 icon: Icon(
                   Icons.delete,
-                  color: Theme.of(context).errorColor,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 label: Text(
                   'Excluir',
                   style: TextStyle(
-                    color: Theme.of(context).errorColor,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -88,7 +88,7 @@ class _TransactionItemState extends State<TransactionItem> {
             : IconButton(
                 onPressed: () => widget.onRemove(widget.tr.id),
                 icon: const Icon(Icons.delete),
-                color: Theme.of(context).errorColor,
+                color: Theme.of(context).colorScheme.error,
               ),
       ),
     );

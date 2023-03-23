@@ -21,7 +21,7 @@ class TransactionList extends StatelessWidget {
                   FittedBox(
                     child: Text(
                       'Nenhuma Transferência Cadastrada!',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
                   SizedBox(

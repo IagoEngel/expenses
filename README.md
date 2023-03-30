@@ -1,16 +1,14 @@
-# expenses
+# Projeto Expenses
 
-A new Flutter project.
+Segundo projeto apresentado no curso "Aprenda Flutter e Desenvolva Apps Para Android e IOS 2022" - "Seção 4: Construindo App Real - Despesas Pessoais" e "Seção 5: Interfaces Responsivas & Adaptativas". O intuito deste app seria ter um controle básico de suas economias.
 
-## Getting Started
+Nele, eu aprendi e fixei alguns contéudos como: 
+<br/> -> Usar fontes diferentes e adicioná-las no pubspec.yaml
+<br/> -> Declarar e utilizar temas que o app inteiro irá se basear
+<br/> -> Ciclo de vida dos widgets
+<br/> -> Responsividade do app no modo vertical e horizontal
+<br/> -> Adaptabilidade para Android e iOS
 
-This project is a starting point for a Flutter application.
+Versão: ^3.7.7
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Gif do aplicativo desenvolvido](expenses.gif)
